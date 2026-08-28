@@ -20,7 +20,7 @@ public:
 
     void drawSelf(sf::RenderWindow& window) override;
     int getBoardSize() const;
-
+    // Preview mechanics for pasting presets
     void setGhost(const Preset* preset, int cellX, int cellY);
     void clearGhost();
     void pasteGhost();
@@ -32,14 +32,19 @@ private:
     int _height;
     int _cellSize;
     bool _wrapEdges = false;
-
+    // Render optimization
+    sf::Texture _boardTexture;
+    sf::Sprite _boardSprite;
+    std::vector<sf::Uint8> _pixelData;
+    // Double buffer
     std::vector<uint8_t> _cells;
     std::vector<uint8_t> _nextCells;
-    sf::RectangleShape _cellShape;
-
+ 
     const Preset* _currentGhost = nullptr;
     int _ghostX = 0;
     int _ghostY = 0;
+    // Static geometry for the background grid
+    sf::VertexArray _gridLines;
 
     int getIndex(int x, int y) const;
     int countAliveNeighbours(int x, int y) const;

@@ -13,7 +13,7 @@ Root::Root()
     _isStatusTimerActive(false)
 {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
+    settings.antialiasingLevel = 4;
 
     _mainWindow.create(
         sf::VideoMode(_WINDOW_WIDTH, _WINDOW_HEIGHT),

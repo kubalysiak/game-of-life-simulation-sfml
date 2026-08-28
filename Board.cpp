@@ -8,14 +8,32 @@
 Board::Board(int width, int height, int cellSize) :_width(width), _height(height), _cellSize(cellSize), _wrapEdges(false) {
     _cells.resize(static_cast<size_t>(_width) * _height, 0);
     _nextCells.resize(static_cast<size_t>(_width) * _height, 0);
+    // Init RGBA pixel array
+    _pixelData.resize(static_cast<size_t>(_width) * _height * 4, 255);
 
-    float shapeSize = static_cast<float>(cellSize);
-    if (cellSize > 2) {
-        shapeSize -= 1.0f; 
+    // Texture setup
+    _boardTexture.create(_width, _height);
+    
+    _boardTexture.setSmooth(false);
+
+    _boardSprite.setTexture(_boardTexture);
+    // Scale to match defined cell size visually
+    _boardSprite.setScale(static_cast<float>(_cellSize), static_cast<float>(_cellSize));
+
+    _gridLines.setPrimitiveType(sf::Lines);
+    if (cellSize > 2) { 
+        sf::Color gridColor(45, 45, 45); 
+        // Vertical lines
+        for (int x = 0; x <= _width; ++x) {
+            _gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x * cellSize), 0), gridColor));
+            _gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(x * cellSize), static_cast<float>(_height * cellSize)), gridColor));
+        }
+        // Horizontal lines
+        for (int y = 0; y <= _height; ++y) {
+            _gridLines.append(sf::Vertex(sf::Vector2f(0.f, static_cast<float>(y * cellSize)), gridColor));
+            _gridLines.append(sf::Vertex(sf::Vector2f(static_cast<float>(_width * cellSize), static_cast<float>(y * cellSize)), gridColor));
+        }
     }
-
-    _cellShape.setSize(sf::Vector2f(shapeSize, shapeSize));
-    _cellShape.setOutlineThickness(0);
 
     _isVisible = true;
 }
@@ -107,34 +125,41 @@ void Board::updateBoard() {
 }
 
 void Board::drawSelf(sf::RenderWindow& window) {
-    for (int y = 0; y < _height; y++) {
-        for (int x = 0; x < _width; x++) {
-            int idx = getIndex(x, y);
+    int totalCells = _width * _height;
+    // Update pixel array
+    for (int i = 0; i < totalCells; ++i) {
+        int pixelIndex = i * 4;
+        // Determine color
+        sf::Uint8 color = _cells[i] ? 255 : 0;
 
-            _cellShape.setPosition(static_cast<float>(x * _cellSize), static_cast<float>(y * _cellSize));
-
-            if (_cells[idx]) {
-                _cellShape.setFillColor(sf::Color::White);
-            }
-            else {
-                _cellShape.setFillColor(sf::Color::Black);
-            }
-
-            window.draw(_cellShape);
-        }
+        _pixelData[pixelIndex ++] = color; // R
+        _pixelData[pixelIndex ++] = color; // G
+        _pixelData[pixelIndex ++] = color; // B
+        _pixelData[pixelIndex] = 255;   // A 
     }
+    // Push updated array
+    _boardTexture.update(_pixelData.data());
+    // Render
+    window.draw(_boardSprite);
+    // Overlay grid if cells are large enough
+    if (_cellSize > 2) {
+        window.draw(_gridLines);
+    }
+    // Render preset placement preview
     if (_currentGhost != nullptr) {
-        sf::RectangleShape ghostShape(_cellShape.getSize());
+        float shapeSize = static_cast<float>(_cellSize);
+        if (_cellSize > 2) shapeSize -= 1.0f;
+
+        sf::RectangleShape ghostShape(sf::Vector2f(shapeSize, shapeSize));
         ghostShape.setFillColor(sf::Color(255, 120, 0, 150));
 
         for (int y = 0; y < _currentGhost->height; ++y) {
             for (int x = 0; x < _currentGhost->width; ++x) {
-                
+                // Draw only active cells
                 if (_currentGhost->data[static_cast<size_t>(y) * _currentGhost->width + x]) {
                     int drawX = _ghostX + x;
                     int drawY = _ghostY + y;
 
-                    
                     ghostShape.setPosition(static_cast<float>(drawX * _cellSize), static_cast<float>(drawY * _cellSize));
                     window.draw(ghostShape);
                 }
