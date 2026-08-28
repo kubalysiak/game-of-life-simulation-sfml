@@ -12,3 +12,4 @@ build/
 *.sln
 *.vcxproj
 *.vcxproj.*
+CMakeSettings.json
