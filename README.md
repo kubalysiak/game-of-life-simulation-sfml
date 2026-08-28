@@ -25,7 +25,7 @@ which is then uploaded to `sf::Texture` for rendering.
 ## Building and running
 This project supports multiple builds methods. Choose the one that fits your environment.
 
-### Prerequisities
+### Prerequisites
 *	C++20 compatible compiler.
 *	[SFML Library](https://www.sfml-dev.org/download/) (Version 2.5.x).
 *	[CMake](https://cmake.org/) (Version 3.15 or newer) - *if using CMake build methods*.
