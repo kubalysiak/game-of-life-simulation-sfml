@@ -3,18 +3,6 @@
 An interactive implementation of Conway's Game of Life written in C++ using the SFML graphics library. Project features a custom user interface,
 preset management and a rendering pipeline.
 
-## Screenshots
-
-![Main menu](screenshots/menu.png)
-*Main menu with grid size selection.*
-
-![Simulation](screenshots/simulation.png)
-*Simulation view with active UI panel.*
-
-![Preset list](screenshots/presetlist.png)
-![Preset ghost](screenshots/presetghost.png)
-*Preset management system allowing users to save, load and place patterns using visual ghost preview.*
-
 ## Controls
 
 * **Left Mouse Button:** Draw active cells / Paste selected preset.
@@ -74,7 +62,7 @@ This project supports multiple builds methods. Choose the one that fits your env
    *	Open Visual Studio and select Open a local folder (select the root folder containing `CMakeLists.txt`).
 3. **Configure SFML path:**
    *	Go to **Project -> CMake Settings**.
-   *	Add a new CMake variable named `CMAKE_PREFIX_PATH` and set its value to your SFML directory (e.g. `C:/SFML-2.5.x`).
+   *	Add a new CMake variable named `SFML_DIR` and set its value to your SFML cmake directory (e.g. `C:/SFML-2.5.x/lib/cmake/SFML`).
    *	Save `CMakeSettings.json`.
 4. **Assets & DLLs:**
    *	Build the project.
@@ -103,6 +91,17 @@ This project supports multiple builds methods. Choose the one that fits your env
    ./GameOfLifekubalysiak
    ```
 
+## Screenshots
+
+![Main menu](screenshots/menu.png)
+*Main menu with grid size selection.*
+
+![Simulation](screenshots/simulation.png)
+*Simulation view with active UI panel.*
+
+![Preset list](screenshots/presetlist.png)
+![Preset ghost](screenshots/presetghost.png)
+*Preset management system allowing users to save, load and place patterns using visual ghost preview.*
 
 ## License
 This project is open-sourced and available under the MIT License.
